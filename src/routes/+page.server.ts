@@ -12,7 +12,7 @@ export const load = (async ({ fetch }) => {
 		})
 		const idsArray: number[] = await idsRes.json()
 
-		const storys = idsArray.slice(0, 20).map(async (id: number) => {
+		const storys = idsArray.slice(0, 10).map(async (id: number) => {
 			const storyUrl = `https://hacker-news.firebaseio.com/v0/item/${id}.json`
 			const response = await fetch(storyUrl, {
 				method: "GET",
