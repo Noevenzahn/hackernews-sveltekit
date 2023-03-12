@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { fade } from "svelte/transition"
+
 	export let story: any
 	let copied = false
 
@@ -26,7 +28,9 @@
 			/>
 		</svg>
 	</button>
-	<p class="copy" style={copied ? "display: block" : ""}>copied!</p>
+	{#if copied}
+		<p class="copy" transition:fade>copied!</p>
+	{/if}
 </div>
 
 <style>
@@ -56,12 +60,11 @@
 		stroke-width: 2;
 	}
 	.copy {
-		display: none;
 		position: absolute;
 		right: 0;
-		top: 0;
+		top: -8px;
 		margin: auto 10px;
 		color: #fff;
-		font-size: smaller;
+		font-size: small;
 	}
 </style>

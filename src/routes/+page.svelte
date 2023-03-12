@@ -5,15 +5,7 @@
 
 	export let data: PageServerData
 
-	let copied = false
-
-	const copy = (link: string) => {
-		navigator.clipboard.writeText(link)
-		copied = true
-		setTimeout(() => (copied = false), 1000)
-	}
-
-	function timeAgo(unixTimeStr: number) {
+	const getTimeAgo = (unixTimeStr: number) => {
 		const unixTime = unixTimeStr * 1000
 		const timeDiff = Date.now() - unixTime
 		const timeAgoInMinutes = timeDiff / 1000 / 60
@@ -23,6 +15,9 @@
 		if (timeAgoInMinutes < 60) return `${Math.round(timeAgoInMinutes)} minutes ago`
 		else if (timeAgoInHours < 24) return `${Math.round(timeAgoInHours)} hours ago`
 		else return `${Math.round(timeAgoInDays)} days ago`
+	}
+	const getTimeString = (time: number) => {
+		return new Date(time * 1000).toString().split(" G")[0]
 	}
 </script>
 
@@ -43,12 +38,22 @@
 					<CopyButton {story} />
 
 					<div>
-						<p>
+						<p class="description">
 							{story.preview.description ? story.preview.description : ""}
 						</p>
 						<p class="info">
-							{story.data.score} points by {story.data.by}
-							{timeAgo(story.data.time)}
+							<span>
+								{story.data.score} points by {story.data.by}
+							</span>
+							<span title={getTimeString(story.data.time)}>
+								{getTimeAgo(story.data.time)}
+							</span>
+							{#if story.data.kids}
+								| {story.data.kids.length} comments
+							{/if}
+							<span>
+								| {story.data.url.split("/")[2].replace("www.", "")}
+							</span>
 						</p>
 					</div>
 				</div>
@@ -80,8 +85,8 @@
 		font-size: small;
 	}
 	img {
-		min-width: 100px;
-		width: 100px;
+		min-width: 150px;
+		width: 150px;
 		height: 100%;
 		margin-right: 40px;
 		border-radius: 5px;
@@ -94,6 +99,12 @@
 	.info {
 		font-size: smaller;
 		color: #7e7e7e;
+	}
+	.description {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
 	}
 	@media (max-width: 600px) {
 		img {
